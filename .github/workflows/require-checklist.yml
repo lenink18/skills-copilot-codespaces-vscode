@@ -13,18 +13,23 @@ jobs:
       run: |
         # Retrieve the content of PULL_REQUEST_TEMPLATE.md
         template_url="${{ github.event.pull_request.url }}/files"
-        checklist_content=$(curl -s $template_url | jq -r '.[] | select(.filename == "PULL_REQUEST_TEMPLATE.md") | .raw_url')
-        template_content=$(curl -s $checklist_content)
+checklist_content=$(curl -s $template_url | jq -r '.[] | select(.filename == "PULL_REQUEST_TEMPLATE.md") | .raw_url')
 
-        # Define the regex pattern to match checklist items
-        pattern="- \[([xX\s])\] (.*)"
+if [[ -z $checklist_content ]]; then
+  echo "::error::PULL_REQUEST_TEMPLATE.md file not found in the pull request."
+  exit 1
+fi
 
-        # Check if each checklist item is marked as completed
-        while IFS= read -r line; do
-          if [[ $line =~ $pattern ]]; then
-            if [[ ${BASH_REMATCH[1]} != "x" && ${BASH_REMATCH[1]} != "X" ]]; then
-              echo "::error::Uncompleted checklist item: ${BASH_REMATCH[2]}"
-              exit 1
-            fi
-          fi
-        done <<< "$template_content"
+template_content=$(curl -s $checklist_content)
+
+# Check if each checklist item is marked as completed
+pattern="- \[([xX\s])\] (.*)"
+
+while IFS= read -r line; do
+  if [[ $line =~ $pattern ]]; then
+    if [[ ${BASH_REMATCH[1]} != "x" && ${BASH_REMATCH[1]} != "X" ]]; then
+      echo "::error::Uncompleted checklist item: ${BASH_REMATCH[2]}"
+      exit 1
+    fi
+  fi
+done <<< "$template_content"
