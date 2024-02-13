@@ -17,7 +17,7 @@ jobs:
         # Retrieve the content of PULL_REQUEST_TEMPLATE.md
         template_url="https://api.github.com/repos/lenink18/skills-copilot-codespaces-vscode/pulls/2/files"
         checklist_content=$(curl -s $template_url | jq -r '.[] | select(.filename == "PULL_REQUEST_TEMPLATE.md") | .raw_url')
-        template_content=$(curl -s $checklist_content)
+        template_content=$checklist_content
 
         # Define the regex pattern to match checklist items
         pattern="- \[([xX\s])\] (.*)"
