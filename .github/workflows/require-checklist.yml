@@ -3,9 +3,6 @@ name: Checklist Validation
 on:
   pull_request:
     types: [opened, edited, synchronize]
-  push:
-    branches:
-      - main
 
 jobs:
   checklist:
