@@ -11,7 +11,7 @@ jobs:
     steps:
     - name: Check Checklist
       run: |
-        checklist=$(curl -s "${{ github.event.pull_request.url }}/files" | jq -r '.[] | select(.filename == "PULL_REQUEST_TEMPLATE.md") | .raw_url')
+        checklist=$(select(.filename == "PULL_REQUEST_TEMPLATE.md")')
         checklist_content=$(curl -s $checklist)
 
         # Define the regex pattern to match checklist items
