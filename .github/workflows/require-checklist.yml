@@ -12,7 +12,7 @@ jobs:
     - name: Check Checklist
       run: |
         # Retrieve the content of PULL_REQUEST_TEMPLATE.md
-        template_url="${{ github.event.pull_request.url }}/files"
+        template_url="https://api.github.com/repos/lenink18/skills-copilot-codespaces-vscode/pulls/2/files"
         checklist_content=$(curl -s $template_url | jq -r '.[] | select(.filename == "PULL_REQUEST_TEMPLATE.md") | .raw_url')
         template_content=$(curl -s $checklist_content)
 
