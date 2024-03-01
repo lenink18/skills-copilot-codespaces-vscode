@@ -1,3 +1,6 @@
+add a check to ensure that the checklist exists in the PR body.
+Here’s the updated version of your workflow:
+
 name: Pull Request Checklist
 
 on:
@@ -6,19 +9,23 @@ on:
   push:
     branches:
       - main
-      
+
 jobs:
   checklist:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check if PR contains completed checklist
-      run: |
-        CHECKLIST_REGEX='\[ \]'
+      - name: Check if PR contains a checklist
+        run: |
+          CHECKLIST_REGEX='\[ \]'
+          PR_BODY="${{ github.event.pull_request.body }}"
 
-        if grep -q "$CHECKLIST_REGEX" ${{ github.event.pull_request.body }}; then
-          echo "Checklist incomplete. Please complete all checklist items before merging."
-          exit 1
-        else
-          echo "Checklist complete. You can proceed with merging."
-        fi
+          if ! grep -q "$CHECKLIST_REGEX" <<< "$PR_BODY"; then
+            echo "Checklist not found. Please include a checklist in your PR description."
+            exit 1
+          elif grep -q "$CHECKLIST_REGEX" <<< "$PR_BODY"; then
+            echo "Checklist incomplete. Please complete all checklist items before merging."
+            exit 1
+          else
+            echo "Checklist complete. You can proceed with merging."
+          fi
