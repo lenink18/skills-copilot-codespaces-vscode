@@ -12,6 +12,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
       
+    - name: Debug File Content
+      run: |
+        cat PULL_REQUEST_TEMPLATE.md
+    
     - name: Check if all checkboxes are checked
       run: |
         unchecked_items=$(grep -oP '\[ \]\s+\K.+' PULL_REQUEST_TEMPLATE.md || true)
