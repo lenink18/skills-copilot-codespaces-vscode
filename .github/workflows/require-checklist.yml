@@ -1,24 +1,23 @@
-name: Pull Request Checklist
+name: Check PR Checklist
 
 on:
   pull_request:
-    types: [opened, edited, synchronize, reopened]
-  push:
-    branches:
-      - main
+    types: [opened, synchronize]
 
-steps:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    
+    steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
+      
     - name: Check if all checkboxes are checked
       run: |
-        #!/bin/bash
-
-        unchecked_items=$(grep -oP '\[ \]\s+\K.+' PULL_REQUEST_TEMPLATE.md)
+        unchecked_items=$(grep -oP '\[ \]\s+\K.+' PULL_REQUEST_TEMPLATE.md || true)
         
         if [ -n "$unchecked_items" ]; then
-          echo "Error: The following checklist items are unchecked:"
+          echo "::error::The following checklist items are unchecked:"
           echo "$unchecked_items"
           exit 1
         else
