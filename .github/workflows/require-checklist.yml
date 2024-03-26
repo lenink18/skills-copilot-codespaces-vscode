@@ -18,7 +18,7 @@ jobs:
     
     - name: Check if all checkboxes are checked
       run: |
-        unchecked_items=$(grep -oP '\[ \]\s+\K.+' PULL_REQUEST_TEMPLATE.md || true)
+        unchecked_items=$(grep -oP '\[ \]\s+\K.+' checklistnew.md || true)
         
         if [ -n "$unchecked_items" ]; then
           echo "::error::The following checklist items are unchecked:"
