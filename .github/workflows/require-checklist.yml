@@ -14,7 +14,7 @@ jobs:
       
     - name: Debug File Content
       run: |
-        cat PULL_REQUEST_TEMPLATE.md
+        cat checklistnew.md
     
     - name: Check if all checkboxes are checked
       run: |
