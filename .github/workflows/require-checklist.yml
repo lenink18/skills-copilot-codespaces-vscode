@@ -7,22 +7,20 @@ on:
     branches:
       - main
 
-jobs:
-  checklist:
-    runs-on: ubuntu-latest
+steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    steps:
-      - name: Check if PR contains a checklist
-        run: |
-          CHECKLIST_REGEX='\[ \]'
-          PR_BODY="${{ github.event.pull_request.body }}"
+    - name: Check if all checkboxes are checked
+      run: |
+        #!/bin/bash
 
-          if ! grep -q "$CHECKLIST_REGEX" <<< "$PR_BODY"; then
-            echo "Checklist not found. Please include a checklist in your PR description."
-            exit 1
-          elif grep -q "$CHECKLIST_REGEX" <<< "$PR_BODY"; then
-            echo "Checklist incomplete. Please complete all checklist items before merging."
-            exit 1
-          else
-            echo "Checklist complete. You can proceed with merging."
-          fi
+        unchecked_items=$(grep -oP '\[ \]\s+\K.+' PULL_REQUEST_TEMPLATE.md)
+        
+        if [ -n "$unchecked_items" ]; then
+          echo "Error: The following checklist items are unchecked:"
+          echo "$unchecked_items"
+          exit 1
+        else
+          echo "All checklist items are checked."
+        fi
