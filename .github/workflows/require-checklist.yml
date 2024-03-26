@@ -12,16 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Debug File Content
+    - name: Checlist for developers
       run: |
-        cat checklistnew.md
+        cat pull_request_template.md
     
     - name: Check if all checkboxes are checked
       run: |
-        unchecked_items=$(grep -oP '\[ \]\s+\K.+' checklistnew.md || true)
+        unchecked_items=$(grep -oP '\[ \]\s+\K.+' pull_request_template.md || true)
         
         if [ -n "$unchecked_items" ]; then
           echo "::error::The following checklist items are unchecked:"
