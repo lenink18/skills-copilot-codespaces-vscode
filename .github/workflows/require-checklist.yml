@@ -14,11 +14,11 @@ jobs:
     steps:
     - name: Checlist for developers
       run: |
-        cat pull_request_template.md
+        cat PULL_REQUEST_TEMPLATE.md
     
     - name: Check if all checkboxes are checked
       run: |
-        unchecked_items=$(grep -oP '\[ \]\s+\K.+' pull_request_template.md || true)
+        unchecked_items=$(grep -oP '\[ \]\s+\K.+' PULL_REQUEST_TEMPLATE.md || true)
         
         if [ -n "$unchecked_items" ]; then
           echo "::error::The following checklist items are unchecked:"
