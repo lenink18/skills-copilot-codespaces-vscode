@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: List Root Directory Contents
+      run: ls -l
+      
     - name: Checlist for developers
       run: |
         cat PULL_REQUEST_TEMPLATE.md
