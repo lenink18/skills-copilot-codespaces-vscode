@@ -12,6 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Debug Workflow Environment
+      run: |
+        pwd
+        ls -l
     - name: List Root Directory Contents
       run: ls -l
       
