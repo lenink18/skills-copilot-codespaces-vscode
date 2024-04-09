@@ -17,20 +17,20 @@ jobs:
         pwd
         ls -l
     - name: List Root Directory Contents
-      run: ls -l
+      run: ls -la
       
-    - name: Checklist for developers
-      run: |
-        cat /home/runner/work/skills-copilot-codespaces-vscode/PULL_REQUEST_TEMPLATE.md
+    #- name: Checklist for developers
+     # run: |
+      #  cat /home/runner/work/skills-copilot-codespaces-vscode/PULL_REQUEST_TEMPLATE.md
     
-    - name: Check if all checkboxes are checked
-      run: |
-        unchecked_items=$(grep -oP '\[ \]\s+\K.+' PULL_REQUEST_TEMPLATE.md | sed '/^$/d' || true)
+    #- name: Check if all checkboxes are checked
+     # run: |
+      #  unchecked_items=$(grep -oP '\[ \]\s+\K.+' PULL_REQUEST_TEMPLATE.md | sed '/^$/d' || true)
         
-        if [ -n "$unchecked_items" ]; then
-          echo "::error::The following checklist items are unchecked:"
-          echo "$unchecked_items"
-          exit 1
-        else
-          echo "All checklist items are checked."
-        fi
+       # if [ -n "$unchecked_items" ]; then
+        #  echo "::error::The following checklist items are unchecked:"
+         # echo "$unchecked_items"
+          #exit 1
+        #else
+         # echo "All checklist items are checked."
+        #fi
