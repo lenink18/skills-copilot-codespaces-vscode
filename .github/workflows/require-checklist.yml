@@ -1,36 +1,26 @@
-name: Check PR Checklist
-
-on:
-  pull_request:
-    types: [opened, synchronize]
-  push:
-    branches:
-      - main
-
 jobs:
   check:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v4
-    - name: Debug Workflow Environment
-      run: |
-        pwd
-        ls -l
-    - name: List Root Directory Contents
-      run: ls -l
-    - name: Checklist for developers
-      run: |
-        cat PULL_REQUEST_TEMPLATE.md
-    
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Get PR description
+      id: pr_description
+      run: echo "::set-output name=description::$(curl -sH 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" | jq -r '.body')"
+      
     - name: Check if all checkboxes are checked
       run: |
-        unchecked_items=$(grep -oP '\[ \]\s+\K.+' PULL_REQUEST_TEMPLATE.md | sed '/^$/d' || true)
+        description="$PR_DESCRIPTION"
+        unchecked_items=$(echo "$description" | grep -oP '\[ \]\s+\K.+' | sed '/^$/d' || true)
+        echo "Unchecked items:"
+        echo "$unchecked_items"
         
         if [ -n "$unchecked_items" ]; then
           echo "::error::The following checklist items are unchecked:"
           echo "$unchecked_items"
           exit 1
         else
-         echo "All checklist items are checked."
+          echo "All checklist items are checked."
         fi
