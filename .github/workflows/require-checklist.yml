@@ -21,7 +21,7 @@ jobs:
       
     - name: Checklist for developers
       run: |
-        cat PULL_REQUEST_TEMPLATE.md
+        cat /home/runner/work/skills-copilot-codespaces-vscode/skills-copilot-codespaces-vscode/PULL_REQUEST_TEMPLATE.md
     
     - name: Check if all checkboxes are checked
       run: |
