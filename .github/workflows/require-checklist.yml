@@ -15,13 +15,13 @@ jobs:
     - name: List Root Directory Contents
       run: ls -l
       
-    - name: Checlist for developers
+    - name: Checklist for developers
       run: |
         cat PULL_REQUEST_TEMPLATE.md
     
     - name: Check if all checkboxes are checked
       run: |
-        unchecked_items=$(grep -oP '\[ \]\s+\K.+' PULL_REQUEST_TEMPLATE.md || true)
+        unchecked_items=$(grep -oP '\[ \]\s+\K.+' PULL_REQUEST_TEMPLATE.md | sed '/^$/d' || true)
         
         if [ -n "$unchecked_items" ]; then
           echo "::error::The following checklist items are unchecked:"
