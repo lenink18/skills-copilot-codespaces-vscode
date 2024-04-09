@@ -1,4 +1,4 @@
-name: Check Pull Request Checklist2
+name: Check Pull Request Checklist3
 on:
   pull_request:
     types: [opened, edited]
@@ -29,7 +29,7 @@ jobs:
               }
             }
             if (!allChecked) {
-              console.log(`Checklist items not checked: ${uncheckedItems.join(', ')}`);
+              console.log(`Checklist items not checked:\n${uncheckedItems.join('\n')}`);
               process.exit(1);
             } else {
               console.log('All checklist items are checked:');
