@@ -1,38 +1,33 @@
-name: Check PR Checklist
-
+name: Check Pull Request Checklist
 on:
   pull_request:
-    types: [opened, synchronize]
-  push:
-    branches:
-      - main
+    types: [opened, edited]
 
 jobs:
-  check:
+  check_checklist:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Get PR description
-      id: pr_description
-      run: |
-        echo "::set-output name=description::$(curl -sH 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' \"https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}\" | jq -r '.body')"
-      env:
-        PR_NUMBER: ${{ github.event.pull_request.number }}
-        
-    - name: Check if all checkboxes are checked
-      run: |
-        description="${{ steps.pr_description.outputs.description }}"
-        unchecked_items=$(echo "$description" | grep -oP '\[ \]\s+\K.+' | sed '/^$/d' || true)
-        echo "Unchecked items:"
-        echo "$unchecked_items"
-        
-        if [ -n "$unchecked_items" ]; then
-          echo "::error::The following checklist items are unchecked:"
-          echo "$unchecked_items"
-          exit 1
-        else
-          echo "All checklist items are checked."
-        fi
+      - name: Check Checklist
+        id: checklist
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const checklistFile = fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8');
+            const checklistRegex = /- \[[ x]\] (.+)/g;
+            const checklistMatches = checklistFile.matchAll(checklistRegex);
+            let allChecked = true;
+            let uncheckedItems = [];
+            for (const match of checklistMatches) {
+              if (!match[0].includes('[x]')) {
+                allChecked = false;
+                uncheckedItems.push(match[1]);
+              }
+            }
+            if (!allChecked) {
+              console.log(`Checklist items not checked: ${uncheckedItems.join(', ')}`);
+              process.exit(1);
+            } else {
+              console.log('All checklist items are checked.');
+            }
