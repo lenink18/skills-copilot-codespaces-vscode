@@ -1,3 +1,12 @@
+name: Check PR Checklist
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches:
+      - main
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -8,11 +17,14 @@ jobs:
       
     - name: Get PR description
       id: pr_description
-      run: echo "::set-output name=description::$(curl -sH 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" | jq -r '.body')"
-      
+      run: |
+        echo "::set-output name=description::$(curl -sH 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" | jq -r '.body')"
+      env:
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        
     - name: Check if all checkboxes are checked
       run: |
-        description="$PR_DESCRIPTION"
+        description="${{ steps.pr_description.outputs.description }}"
         unchecked_items=$(echo "$description" | grep -oP '\[ \]\s+\K.+' | sed '/^$/d' || true)
         echo "Unchecked items:"
         echo "$unchecked_items"
