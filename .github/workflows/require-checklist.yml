@@ -1,4 +1,4 @@
-name: Check Pull Request Checklist3
+name: Check Pull Request Checklist
 on:
   pull_request:
     types: [opened, edited]
@@ -15,17 +15,19 @@ jobs:
           script: |
             const fs = require('fs');
             const checklistFile = fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8');
-            const checklistRegex = /- \[[ x]\] (.+)/g;
+            const checklistRegex = /- \[([ x])\] (.+)/g;
             let allChecked = true;
             let checkedItems = [];
             let uncheckedItems = [];
             let match;
             while ((match = checklistRegex.exec(checklistFile)) !== null) {
-              if (match[0].includes('[x]')) {
-                checkedItems.push(match[1]);
+              const isChecked = match[1] === 'x';
+              const itemText = match[2];
+              if (isChecked) {
+                checkedItems.push(itemText);
               } else {
                 allChecked = false;
-                uncheckedItems.push(match[1]);
+                uncheckedItems.push(itemText);
               }
             }
             if (!allChecked) {
