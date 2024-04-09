@@ -29,5 +29,5 @@ jobs:
               console.log(`Checklist items not checked: ${uncheckedItems.join(', ')}`);
               process.exit(1);
             } else {
-              console.log('All checklist items are checked.');
+              console.log('All checklist items are checked.{checklistFile}');
             }
