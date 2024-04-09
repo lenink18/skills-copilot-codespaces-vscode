@@ -19,11 +19,6 @@ jobs:
         ls -l
     - name: List Root Directory Contents
       run: ls -l
-      
-    - name: Checklist for developers
-      run: |
-        cat /home/runner/work/skills-copilot-codespaces-vscode/PULL_REQUEST_TEMPLATE.md
-    
     - name: Check if all checkboxes are checked
       run: |
         unchecked_items=$(grep -oP '\[ \]\s+\K.+' PULL_REQUEST_TEMPLATE.md | sed '/^$/d' || true)
